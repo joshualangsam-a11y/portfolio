@@ -46,7 +46,7 @@ export default function Hero() {
       ref={ref}
       className="relative flex min-h-screen flex-col justify-center px-6 md:px-16 lg:px-24"
     >
-      <motion.div className="max-w-[1200px]" style={{ opacity }}>
+      <motion.div className="mx-auto w-full max-w-[1200px]" style={{ opacity }}>
         {/* First name */}
         <div className="overflow-hidden">
           <motion.div style={{ y: y1 }}>

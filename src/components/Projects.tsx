@@ -265,7 +265,7 @@ export default function Projects() {
     <section id="work">
       <div className="px-6 md:px-16 lg:px-24 pt-16 pb-8 md:pt-20 md:pb-10">
         <FadeIn>
-          <div className="flex items-end justify-between">
+          <div className="mx-auto w-full max-w-[1200px] flex items-end justify-between">
             <div>
               <span className="text-xs tracking-[0.2em] uppercase text-text-muted">
                 Selected Work

@@ -28,7 +28,7 @@ const stack = [
 export default function About() {
   return (
     <section id="about" className="px-6 md:px-16 lg:px-24 py-20 md:py-28">
-      <div className="max-w-[900px]">
+      <div className="mx-auto w-full max-w-[900px]">
         <FadeIn>
           <span className="text-xs tracking-[0.2em] uppercase text-text-muted">
             About

@@ -122,7 +122,7 @@ function AgentNode({
 export default function AgentShowcase() {
   return (
     <section className="px-6 md:px-16 lg:px-24 py-20 md:py-28 border-t border-border overflow-hidden">
-      <div className="max-w-[1200px]">
+      <div className="mx-auto w-full max-w-[1200px]">
         <FadeIn>
           <span className="text-xs tracking-[0.2em] uppercase text-text-muted">
             Infrastructure
