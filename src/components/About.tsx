@@ -28,7 +28,7 @@ const stack = [
 export default function About() {
   return (
     <section id="about" className="px-6 md:px-16 lg:px-24 py-20 md:py-28">
-      <div className="mx-auto w-full max-w-[900px]">
+      <div className="mx-auto w-full max-w-[1200px]">
         <FadeIn>
           <span className="text-xs tracking-[0.2em] uppercase text-text-muted">
             About
@@ -36,7 +36,7 @@ export default function About() {
         </FadeIn>
 
         <FadeIn delay={0.1}>
-          <h2 className="mt-8 text-[clamp(1.5rem,4vw,3.5rem)] font-light leading-[1.2] tracking-[-0.02em]">
+          <h2 className="mt-8 max-w-[900px] text-[clamp(1.5rem,4vw,3.5rem)] font-light leading-[1.2] tracking-[-0.02em]">
             I build AI-powered software for industries that move slow.
             Co-founder of <span className="text-accent">Roan Co.</span> I
             orchestrate multi-agent systems that handle sales prospecting, lead

@@ -36,7 +36,7 @@ export default function Contact() {
       id="contact"
       className="px-6 md:px-16 lg:px-24 py-20 md:py-28 overflow-hidden"
     >
-      <motion.div style={{ y }}>
+      <motion.div className="mx-auto w-full max-w-[1200px]" style={{ y }}>
         <FadeIn>
           <h2 className="text-[clamp(2.5rem,7vw,8rem)] font-light leading-[0.9] tracking-[-0.04em]">
             {"Let's build"}
@@ -66,7 +66,7 @@ export default function Contact() {
         </FadeIn>
       </motion.div>
 
-      <div className="mt-20 flex items-end justify-between border-t border-border pt-8">
+      <div className="mx-auto w-full max-w-[1200px] mt-20 flex items-end justify-between border-t border-border pt-8">
         <span className="text-xs text-text-muted/50">
           &copy; {new Date().getFullYear()} Josh Langsam
         </span>
