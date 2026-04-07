@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useScroll, useTransform, useMotionValue } from "framer-motion";
-import { useRef, MouseEvent } from "react";
+import { motion, useMotionValue, animate } from "framer-motion";
+import { useRef, useState, useEffect, MouseEvent } from "react";
 import FadeIn from "./FadeIn";
 
 type Project = {
@@ -224,22 +224,24 @@ function Card3D({ project, index }: { project: Project; index: number }) {
             </div>
           )}
 
-          <div className="mt-6 flex items-center gap-2 text-xs tracking-widest uppercase text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            {project.url ? "Visit" : "Details"}
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              className="transition-transform duration-300 group-hover:translate-x-1"
-            >
-              <path
-                d="M3 8h10M9 4l4 4-4 4"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              />
-            </svg>
-          </div>
+          {project.url && (
+            <div className="mt-6 flex items-center gap-2 text-xs tracking-widest uppercase text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              Visit
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              >
+                <path
+                  d="M3 8h10M9 4l4 4-4 4"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                />
+              </svg>
+            </div>
+          )}
         </div>
       </motion.div>
     </div>
@@ -247,19 +249,55 @@ function Card3D({ project, index }: { project: Project; index: number }) {
 }
 
 export default function Projects() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartX = useRef(0);
+  const scrollStart = useRef(0);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
 
-  const x = useTransform(
-    scrollYProgress,
-    [0, 1],
-    ["0%", `-${((projects.length - 2) / projects.length) * 100}%`],
-  );
+    const onScroll = () => {
+      const maxScroll = track.scrollWidth - track.clientWidth;
+      if (maxScroll > 0) {
+        setProgress(track.scrollLeft / maxScroll);
+      }
+    };
+
+    track.addEventListener("scroll", onScroll, { passive: true });
+    return () => track.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    const track = trackRef.current;
+    if (!track) return;
+    setIsDragging(true);
+    dragStartX.current = e.clientX;
+    scrollStart.current = track.scrollLeft;
+    track.setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDragging || !trackRef.current) return;
+    const dx = e.clientX - dragStartX.current;
+    trackRef.current.scrollLeft = scrollStart.current - dx;
+  };
+
+  const handlePointerUp = () => {
+    setIsDragging(false);
+  };
+
+  const scrollBy = (direction: number) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const cardWidth = 424; // 400px card + 24px gap
+    track.scrollTo({
+      left: track.scrollLeft + direction * cardWidth,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <section id="work">
@@ -274,52 +312,99 @@ export default function Projects() {
                 What I&apos;ve built
               </h2>
             </div>
-            <span className="text-xs font-mono text-text-muted/50">
-              {projects.length} projects
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-mono text-text-muted/50 mr-4">
+                {projects.length} projects
+              </span>
+              <button
+                onClick={() => scrollBy(-1)}
+                className="w-10 h-10 rounded-[7px] border border-border flex items-center justify-center text-text-muted hover:text-accent hover:border-accent/30 transition-colors"
+                aria-label="Previous project"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M10 4l-4 4 4 4" stroke="currentColor" strokeWidth="1.5" />
+                </svg>
+              </button>
+              <button
+                onClick={() => scrollBy(1)}
+                className="w-10 h-10 rounded-[7px] border border-border flex items-center justify-center text-text-muted hover:text-accent hover:border-accent/30 transition-colors"
+                aria-label="Next project"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" />
+                </svg>
+              </button>
+            </div>
           </div>
         </FadeIn>
       </div>
 
-      {/* Horizontal scroll section */}
-      <div ref={containerRef} className="relative h-[200vh]">
-        <div className="sticky top-0 h-screen flex items-center overflow-hidden">
-          <motion.div
-            ref={scrollRef}
-            className="horizontal-scroll"
-            style={{ x }}
-          >
-            {projects.map((project, i) =>
-              project.url ? (
-                <a
-                  key={project.name}
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Card3D project={project} index={i} />
-                </a>
-              ) : (
-                <Card3D key={project.name} project={project} index={i} />
-              ),
-            )}
-          </motion.div>
+      {/* Horizontal scroll track */}
+      <div className="relative">
+        <div
+          ref={trackRef}
+          className="overflow-x-auto"
+          style={{
+            cursor: isDragging ? "grabbing" : "grab",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            WebkitOverflowScrolling: "touch",
+          }}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+        >
+          <div className="horizontal-scroll">
+            {projects.map((project, i) => (
+              <CardWrapper key={project.name} project={project} index={i} isDragging={isDragging} />
+            ))}
+          </div>
+        </div>
 
-          {/* Scroll progress indicator */}
-          <div className="absolute bottom-12 left-6 md:left-16 lg:left-24 right-6 md:right-16 lg:right-24">
+        {/* Scroll progress indicator */}
+        <div className="mt-8 mb-16 px-6 md:px-16 lg:px-24">
+          <div className="mx-auto max-w-[1200px]">
             <div className="h-px bg-border">
               <motion.div
                 className="h-px bg-accent"
-                style={{ scaleX: scrollYProgress, transformOrigin: "left" }}
+                style={{ scaleX: progress, transformOrigin: "left" }}
               />
             </div>
             <div className="mt-4 flex justify-between text-[10px] font-mono text-text-muted/40">
-              <span>01</span>
-              <span>{String(projects.length).padStart(2, "0")}</span>
+              <span>Drag or scroll to explore</span>
+              <span>
+                {String(Math.round(progress * (projects.length - 1)) + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
+              </span>
             </div>
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function CardWrapper({ project, index, isDragging }: { project: Project; index: number; isDragging: boolean }) {
+  const clickStartX = useRef(0);
+
+  const handleClick = (e: React.MouseEvent) => {
+    // Don't navigate if the user was dragging
+    if (Math.abs(e.clientX - clickStartX.current) > 5) {
+      e.preventDefault();
+      return;
+    }
+    if (project.url) {
+      window.open(project.url, "_blank", "noopener,noreferrer");
+    }
+  };
+
+  return (
+    <div
+      onMouseDown={(e) => { clickStartX.current = e.clientX; }}
+      onClick={handleClick}
+      style={{ cursor: project.url ? "pointer" : "default" }}
+    >
+      <Card3D project={project} index={index} />
+    </div>
   );
 }
