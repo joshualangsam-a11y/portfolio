@@ -3,30 +3,30 @@
 import { useRef } from "react";
 import FadeIn from "./FadeIn";
 
-// TODO: Replace these placeholder quotes with real testimonials
+// TODO: Replace with real testimonials once you collect them
 const testimonials = [
   {
     quote:
-      "Josh built our entire case management platform from scratch. The AI document analysis alone saved us hours per case.",
-    name: "Kyle Soch",
+      "Built our entire platform from scratch. The AI-powered workflows alone saved us hours per day.",
+    name: "Legal Tech Client",
     role: "Attorney",
-    company: "BillBone Law",
+    company: "PI Law Firm",
     color: "#c8a97e",
   },
   {
     quote:
-      "He took our distribution tracking from spreadsheets to a real system. Reliable, fast, and he actually understands the business.",
-    name: "Ethan Hampton",
+      "Took our operations from spreadsheets to a real system. Reliable, fast, and he actually understands the business.",
+    name: "Distribution Partner",
     role: "Founder",
-    company: "Hampton Reserve",
+    company: "Consumer Goods",
     color: "#7ec88a",
   },
   {
     quote:
       "Delivered ahead of schedule and went beyond the original scope. Rare to find a developer who thinks about the product, not just the code.",
-    name: "Tal",
-    role: "Client",
-    company: "SushiLab",
+    name: "Freelance Client",
+    role: "Founder",
+    company: "SaaS Startup",
     color: "#7eb8c8",
   },
 ];

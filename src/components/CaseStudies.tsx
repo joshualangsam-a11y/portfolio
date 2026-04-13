@@ -63,8 +63,8 @@ const studies = [
     solution:
       "Built a purpose-built CRM with route optimization, prospect scoring, visit logging, and commission tracking. Five intelligence engines power daily route decisions and expansion targets.",
     results: [
-      { label: "Active accounts", value: "180" },
-      { label: "Daily revenue", value: "~$600" },
+      { label: "Active accounts", value: "180+" },
+      { label: "Route efficiency", value: "3x" },
       { label: "Intel engines", value: "5" },
     ],
     stack: ["Next.js", "Supabase", "TypeScript", "Claude API"],

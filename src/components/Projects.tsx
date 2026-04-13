@@ -62,7 +62,7 @@ const projects: Project[] = [
       "Gas station management platform. Daily fuel reconciliation, cash variance tracking, c-store inventory.",
     color: "#7eb8c8",
     gradient: "linear-gradient(135deg, #0d151a 0%, #10202a 50%, #0d151a 100%)",
-    metrics: "$400/mo SaaS",
+    metrics: "Multi-location SaaS",
     year: "2025",
   },
   {
@@ -73,7 +73,7 @@ const projects: Project[] = [
       "Vape shop management SaaS. Inventory tracking, compliance monitoring, POS integration.",
     color: "#c87ea9",
     gradient: "linear-gradient(135deg, #1a0d15 0%, #2a1020 50%, #1a0d15 100%)",
-    metrics: "$299/mo SaaS",
+    metrics: "Retail SaaS",
     year: "2025",
   },
   {
@@ -84,7 +84,7 @@ const projects: Project[] = [
       "Route management and CRM for wholesale hemp distribution. Commission tracking, visit logging, prospect pipeline.",
     color: "#7ec88a",
     gradient: "linear-gradient(135deg, #0d1a12 0%, #0f2a18 50%, #0d1a12 100%)",
-    metrics: "180 accounts",
+    metrics: "180+ accounts",
     year: "2026",
   },
   {
