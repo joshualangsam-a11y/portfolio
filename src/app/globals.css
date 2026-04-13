@@ -68,7 +68,78 @@ body {
   background-size: 256px 256px;
 }
 
-/* Marquee */
+/* ═══════════════════════════════════════
+   Hero visuals
+   ═══════════════════════════════════════ */
+
+/* Dot grid */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--accent) 0.5px, transparent 0.5px);
+  background-size: 40px 40px;
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+/* Animated aurora gradient */
+.hero-aurora {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+      ellipse 80% 60% at 20% 40%,
+      rgba(200, 169, 126, 0.06) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 60% 80% at 80% 60%,
+      rgba(126, 184, 200, 0.04) 0%,
+      transparent 60%
+    );
+  animation: aurora-drift 12s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(-20px, 10px) scale(1.05);
+  }
+}
+
+/* Animated gradient text */
+.gradient-text {
+  background: linear-gradient(
+    135deg,
+    #c8a97e 0%,
+    #e0c9a0 25%,
+    #c8a97e 50%,
+    #a08060 75%,
+    #c8a97e 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 6s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* ═══════════════════════════════════════
+   Marquee
+   ═══════════════════════════════════════ */
+
 @media (min-width: 768px) {
   .marquee {
     animation: marquee 25s linear infinite;
@@ -84,7 +155,10 @@ body {
   }
 }
 
-/* Custom cursor glow */
+/* ═══════════════════════════════════════
+   Cursor glow
+   ═══════════════════════════════════════ */
+
 .cursor-glow {
   position: fixed;
   width: 500px;
@@ -101,12 +175,18 @@ body {
   transition: opacity 0.3s;
 }
 
-/* Magnetic button */
+/* ═══════════════════════════════════════
+   Buttons & interactions
+   ═══════════════════════════════════════ */
+
 .magnetic-btn {
   transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
-/* 3D card tilt */
+/* ═══════════════════════════════════════
+   3D card system
+   ═══════════════════════════════════════ */
+
 .card-3d {
   transform-style: preserve-3d;
   perspective: 1000px;
@@ -118,7 +198,7 @@ body {
   will-change: transform;
 }
 
-/* Animated gradient border */
+/* Animated gradient border on hover */
 .gradient-border {
   position: relative;
 }
@@ -148,7 +228,10 @@ body {
   opacity: 0.4;
 }
 
-/* Horizontal scroll */
+/* ═══════════════════════════════════════
+   Horizontal scroll
+   ═══════════════════════════════════════ */
+
 .horizontal-scroll {
   display: flex;
   gap: 1.5rem;
@@ -162,7 +245,10 @@ body {
   display: none;
 }
 
-/* Loader */
+/* ═══════════════════════════════════════
+   Loader
+   ═══════════════════════════════════════ */
+
 .loader-curtain {
   position: fixed;
   inset: 0;
@@ -173,7 +259,10 @@ body {
   justify-content: center;
 }
 
-/* Counter animation */
+/* ═══════════════════════════════════════
+   Counter animation
+   ═══════════════════════════════════════ */
+
 @property --num {
   syntax: "<integer>";
   initial-value: 0;
@@ -195,7 +284,10 @@ body {
   }
 }
 
-/* Scrollbar */
+/* ═══════════════════════════════════════
+   Scrollbar
+   ═══════════════════════════════════════ */
+
 ::-webkit-scrollbar {
   width: 4px;
 }
@@ -213,7 +305,10 @@ body {
   background: var(--accent);
 }
 
-/* Agent network lines */
+/* ═══════════════════════════════════════
+   Agent network
+   ═══════════════════════════════════════ */
+
 @keyframes dash-flow {
   to {
     stroke-dashoffset: -20;
@@ -225,7 +320,10 @@ body {
   animation: dash-flow 2s linear infinite;
 }
 
-/* Reveal animation for text */
+/* ═══════════════════════════════════════
+   Reveal animations
+   ═══════════════════════════════════════ */
+
 @keyframes reveal-up {
   from {
     clip-path: inset(100% 0 0 0);
@@ -241,17 +339,66 @@ body {
   animation: reveal-up 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
 }
 
-/* Hero dot grid background */
-.hero-grid {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle, var(--accent) 0.5px, transparent 0.5px);
-  background-size: 40px 40px;
-  opacity: 0.04;
-  pointer-events: none;
+/* ═══════════════════════════════════════
+   Terminal code block
+   ═══════════════════════════════════════ */
+
+.terminal-block {
+  background: #0d0d0d;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  overflow: hidden;
 }
 
-/* Mobile: disable 3D card effects on touch devices */
+.terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: #0e0e0e;
+}
+
+.terminal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* ═══════════════════════════════════════
+   Glow card (social proof)
+   ═══════════════════════════════════════ */
+
+.glow-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-card::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    rgba(200, 169, 126, 0.06) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.glow-card:hover::after {
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════
+   Mobile: disable expensive effects
+   ═══════════════════════════════════════ */
+
 @media (hover: none) and (pointer: coarse) {
   .card-3d {
     transform-style: flat;
@@ -273,5 +420,14 @@ body {
 
   .cursor-glow {
     display: none;
+  }
+
+  .hero-aurora {
+    animation: none;
+  }
+
+  .gradient-text {
+    animation: none;
+    background-position: 0% 50%;
   }
 }

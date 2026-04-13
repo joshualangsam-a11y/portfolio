@@ -3,6 +3,8 @@
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import MagneticButton from "./MagneticButton";
+import ParticleField from "./ParticleField";
+import GradientOrb from "./GradientOrb";
 
 const roles = ["Builder", "Architect", "Operator", "Founder"];
 
@@ -57,8 +59,12 @@ export default function Hero() {
       ref={ref}
       className="relative flex min-h-screen flex-col justify-center px-6 md:px-16 lg:px-24 overflow-hidden"
     >
-      {/* Subtle dot grid background */}
+      {/* Layered backgrounds */}
+      <ParticleField />
       <div className="hero-grid" />
+      <div className="hero-aurora" />
+      <GradientOrb color="#c8a97e" size={800} top="-20%" right="-10%" />
+      <GradientOrb color="#7eb8c8" size={600} bottom="-10%" left="-5%" delay={3} />
 
       <motion.div className="relative z-10 mx-auto w-full max-w-[1200px]" style={{ opacity }}>
         {/* First name */}
@@ -76,11 +82,11 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Last name */}
+        {/* Last name — gradient text */}
         <div className="overflow-hidden">
           <motion.div style={{ y: y2 }}>
             <motion.h1
-              className="text-[clamp(4rem,10vw,11rem)] font-light leading-[0.85] tracking-[-0.04em] text-accent"
+              className="text-[clamp(4rem,10vw,11rem)] font-light leading-[0.85] tracking-[-0.04em] gradient-text"
               variants={line}
               initial="hidden"
               animate="visible"
@@ -105,7 +111,7 @@ export default function Hero() {
               <AnimatePresence mode="wait">
                 <motion.span
                   key={roles[roleIndex]}
-                  className="absolute left-0 text-xl md:text-2xl font-light text-accent"
+                  className="absolute left-0 text-xl md:text-2xl font-light gradient-text"
                   initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: -30, opacity: 0 }}
@@ -132,7 +138,7 @@ export default function Hero() {
           </motion.p>
 
           <motion.div
-            className="mt-12 flex gap-5"
+            className="mt-12 flex flex-wrap gap-5"
             variants={fade}
             initial="hidden"
             animate="visible"
@@ -141,9 +147,10 @@ export default function Hero() {
             <MagneticButton>
               <a
                 href="mailto:josh@roanco.law"
-                className="inline-flex items-center gap-2 border border-accent/40 px-8 py-4 text-sm tracking-widest uppercase text-accent transition-all duration-300 hover:bg-accent hover:text-bg rounded-[7px]"
+                className="group relative inline-flex items-center gap-2 border border-accent/40 px-8 py-4 text-sm tracking-widest uppercase text-accent transition-all duration-300 hover:border-accent rounded-[7px] overflow-hidden"
               >
-                Get in touch
+                <span className="absolute inset-0 bg-accent translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                <span className="relative group-hover:text-bg transition-colors duration-300">Get in touch</span>
               </a>
             </MagneticButton>
             <MagneticButton>
@@ -152,6 +159,9 @@ export default function Hero() {
                 className="inline-flex items-center gap-2 px-8 py-4 text-sm tracking-widest uppercase text-text-muted transition-colors duration-300 hover:text-text"
               >
                 View work
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="transition-transform group-hover:translate-y-1">
+                  <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" strokeWidth="1.5" />
+                </svg>
               </a>
             </MagneticButton>
           </motion.div>

@@ -3,6 +3,7 @@
 import { motion, useMotionValue, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect, MouseEvent } from "react";
 import FadeIn from "./FadeIn";
+import GradientOrb from "./GradientOrb";
 
 type Project = {
   name: string;
@@ -10,6 +11,7 @@ type Project = {
   tags: string[];
   description: string;
   color: string;
+  gradient: string;
   url?: string;
   metrics?: string;
   year: string;
@@ -25,6 +27,7 @@ const projects: Project[] = [
     description:
       "AI-powered case management for Florida PI firms. 230+ API routes, intelligent document analysis, automated workflows.",
     color: "#c8a97e",
+    gradient: "linear-gradient(135deg, #1a1510 0%, #2a1f14 50%, #1a1510 100%)",
     url: "https://app.roanco.law",
     metrics: "469 tests passing",
     year: "2025",
@@ -34,8 +37,9 @@ const projects: Project[] = [
     category: "AI / Orchestration",
     tags: ["AI"],
     description:
-      "47-agent system orchestrating sales, enrichment, outreach, deploys, and content across 15 products. One master routes to named specialists in parallel.",
+      "47-agent system orchestrating sales, enrichment, outreach, deploys, and content across 15 products.",
     color: "#8ec87e",
+    gradient: "linear-gradient(135deg, #0d1a10 0%, #142a14 50%, #0d1a10 100%)",
     metrics: "47 agents, 15 products",
     year: "2025",
   },
@@ -44,8 +48,9 @@ const projects: Project[] = [
     category: "Dev Tools / Elixir",
     tags: ["Dev Tools"],
     description:
-      "Terminal orchestrator in Elixir. Manages 8-9 concurrent PTY sessions with intelligent routing, process supervision, and real-time multiplexing.",
+      "Terminal orchestrator in Elixir. 8-9 concurrent PTY sessions with intelligent routing and process supervision.",
     color: "#e07e5a",
+    gradient: "linear-gradient(135deg, #1a100d 0%, #2a1510 50%, #1a100d 100%)",
     metrics: "8 concurrent PTYs",
     year: "2026",
   },
@@ -54,8 +59,9 @@ const projects: Project[] = [
     category: "SaaS / Operations",
     tags: ["SaaS"],
     description:
-      "Gas station management platform. Daily fuel reconciliation, cash variance tracking, and c-store inventory for multi-location operators.",
+      "Gas station management platform. Daily fuel reconciliation, cash variance tracking, c-store inventory.",
     color: "#7eb8c8",
+    gradient: "linear-gradient(135deg, #0d151a 0%, #10202a 50%, #0d151a 100%)",
     metrics: "$400/mo SaaS",
     year: "2025",
   },
@@ -64,8 +70,9 @@ const projects: Project[] = [
     category: "SaaS / Retail",
     tags: ["SaaS"],
     description:
-      "Vape shop management SaaS. Inventory tracking, compliance monitoring, and POS integration for independent retailers.",
+      "Vape shop management SaaS. Inventory tracking, compliance monitoring, POS integration.",
     color: "#c87ea9",
+    gradient: "linear-gradient(135deg, #1a0d15 0%, #2a1020 50%, #1a0d15 100%)",
     metrics: "$299/mo SaaS",
     year: "2025",
   },
@@ -74,8 +81,9 @@ const projects: Project[] = [
     category: "Sales / CRM",
     tags: ["Sales"],
     description:
-      "Route management and CRM for wholesale hemp distribution. Commission tracking, visit logging, prospect pipeline for 500-account target.",
+      "Route management and CRM for wholesale hemp distribution. Commission tracking, visit logging, prospect pipeline.",
     color: "#7ec88a",
+    gradient: "linear-gradient(135deg, #0d1a12 0%, #0f2a18 50%, #0d1a12 100%)",
     metrics: "180 accounts",
     year: "2026",
   },
@@ -84,8 +92,9 @@ const projects: Project[] = [
     category: "Elixir / Prospecting",
     tags: ["Dev Tools", "Sales"],
     description:
-      "Automated website prospecting tool built in Elixir. Scans local businesses, audits site quality, scores leads, and generates outreach.",
+      "Automated website prospecting tool. Scans businesses, audits site quality, scores leads, generates outreach.",
     color: "#c8b87e",
+    gradient: "linear-gradient(135deg, #1a1810 0%, #2a2414 50%, #1a1810 100%)",
     metrics: "Elixir + LiveView",
     year: "2026",
   },
@@ -94,8 +103,9 @@ const projects: Project[] = [
     category: "SaaS / Home Services",
     tags: ["SaaS"],
     description:
-      "AI-powered platform for Florida home service businesses. Client onboarding, engagement tracking, and marketplace matching for snowbird property care.",
+      "AI platform for FL home service businesses. Client onboarding, engagement tracking, marketplace matching.",
     color: "#7e9ec8",
+    gradient: "linear-gradient(135deg, #0d121a 0%, #101e2a 50%, #0d121a 100%)",
     metrics: "FL market focus",
     year: "2026",
   },
@@ -104,8 +114,9 @@ const projects: Project[] = [
     category: "AI / Finance",
     tags: ["AI"],
     description:
-      "Multi-agent AI trading system in Elixir. Eight GenServer agents analyze markets, manage risk, and execute trades through broker APIs.",
+      "Multi-agent AI trading system in Elixir. Eight GenServer agents analyze markets, manage risk, execute trades.",
     color: "#7ec88a",
+    gradient: "linear-gradient(135deg, #0d1a12 0%, #0f2a18 50%, #0d1a12 100%)",
     metrics: "8 GenServer agents",
     year: "2025",
   },
@@ -114,8 +125,9 @@ const projects: Project[] = [
     category: "AI / Video",
     tags: ["AI"],
     description:
-      "Paste a YouTube URL. AI detects viral moments, cuts vertical clips with burned-in captions. FastAPI + Vite, deployed on Railway.",
+      "Paste a YouTube URL. AI detects viral moments, cuts vertical clips with burned-in captions.",
     color: "#c87ea9",
+    gradient: "linear-gradient(135deg, #1a0d15 0%, #2a1020 50%, #1a0d15 100%)",
     year: "2025",
   },
   {
@@ -123,8 +135,9 @@ const projects: Project[] = [
     category: "SaaS / Music",
     tags: ["SaaS", "AI"],
     description:
-      "AI music marketing platform. Artists connect TikTok, Instagram, YouTube, and X. Generates content strategies and schedules posts.",
+      "AI music marketing platform. Artists connect social accounts, generate content strategies, schedule posts.",
     color: "#c87e7e",
+    gradient: "linear-gradient(135deg, #1a0d0d 0%, #2a1414 50%, #1a0d0d 100%)",
     metrics: "Active users",
     year: "2025",
   },
@@ -133,8 +146,9 @@ const projects: Project[] = [
     category: "AI / Marketing",
     tags: ["AI"],
     description:
-      "AI ad generation for PI law firms. Campaign creatives, copy, and video ads with Remotion rendering, tailored to personal injury verticals.",
+      "AI ad generation for PI law firms. Campaign creatives, copy, and video ads with Remotion rendering.",
     color: "#c8c87e",
+    gradient: "linear-gradient(135deg, #1a1a0d 0%, #2a2a14 50%, #1a1a0d 100%)",
     year: "2025",
   },
   {
@@ -142,8 +156,9 @@ const projects: Project[] = [
     category: "Fintech / AI",
     tags: ["AI"],
     description:
-      "AI budget auditor for fraternities. Ingests bank statements, categorizes expenses, flags anomalies, and generates savings recommendations.",
+      "AI budget auditor for fraternities. Ingests bank statements, categorizes expenses, flags anomalies.",
     color: "#a97ec8",
+    gradient: "linear-gradient(135deg, #150d1a 0%, #201020 50%, #150d1a 100%)",
     year: "2025",
   },
   {
@@ -151,8 +166,9 @@ const projects: Project[] = [
     category: "Dev Tools",
     tags: ["Dev Tools"],
     description:
-      "Chrome extension for tab management. Workspaces, auto-suspend, command palette, and keyboard-driven navigation.",
+      "Chrome extension for tab management. Workspaces, auto-suspend, command palette, keyboard-driven nav.",
     color: "#7e8ec8",
+    gradient: "linear-gradient(135deg, #0d101a 0%, #10182a 50%, #0d101a 100%)",
     metrics: "v1.0 shipped",
     year: "2026",
   },
@@ -164,6 +180,53 @@ function useIsTouchDevice() {
     setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
   }, []);
   return isTouch;
+}
+
+function CardMockup({ project }: { project: Project }) {
+  return (
+    <div
+      className="aspect-[16/9] rounded-t-[7px] overflow-hidden relative"
+      style={{ background: project.gradient }}
+    >
+      {/* Abstract app mockup */}
+      <div className="absolute inset-0 p-4 flex gap-3">
+        {/* Sidebar hint */}
+        <div className="w-1/5 flex flex-col gap-1.5">
+          {[...Array(5)].map((_, i) => (
+            <div
+              key={i}
+              className="h-1 rounded-full"
+              style={{
+                width: `${50 + Math.random() * 50}%`,
+                background: i === 0 ? `${project.color}35` : "rgba(255,255,255,0.03)",
+              }}
+            />
+          ))}
+        </div>
+        {/* Content hint */}
+        <div className="flex-1 flex flex-col gap-2">
+          <div className="h-1.5 w-2/5 rounded-full" style={{ background: `${project.color}25` }} />
+          <div className="flex-1 grid grid-cols-2 gap-2">
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="rounded-md"
+                style={{ background: i === 0 ? `${project.color}10` : "rgba(255,255,255,0.015)" }}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Glow overlay */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(ellipse at 50% 0%, ${project.color}10 0%, transparent 70%)`,
+        }}
+      />
+    </div>
+  );
 }
 
 function Card3D({ project, index, disableTilt }: { project: Project; index: number; disableTilt: boolean }) {
@@ -207,21 +270,15 @@ function Card3D({ project, index, disableTilt }: { project: Project; index: numb
         onMouseMove={handleMouse}
         onMouseLeave={handleLeave}
       >
-        {/* Top accent line */}
-        <div
-          className="h-[2px] w-full"
-          style={{
-            background: `linear-gradient(90deg, transparent, ${project.color}, transparent)`,
-            opacity: 0.5,
-          }}
-        />
+        {/* Visual mockup preview */}
+        <CardMockup project={project} />
 
         {/* Number */}
-        <div className="absolute top-6 right-6 text-xs font-mono text-text-muted/20">
+        <div className="absolute top-3 right-3 z-10 text-xs font-mono text-white/10">
           {String(index + 1).padStart(2, "0")}
         </div>
 
-        <div className="p-8 md:p-10 flex flex-col h-full">
+        <div className="p-6 md:p-8 flex flex-col">
           <div className="flex items-center justify-between">
             <span className="text-[10px] tracking-[0.2em] uppercase text-text-muted">
               {project.category}
@@ -231,16 +288,16 @@ function Card3D({ project, index, disableTilt }: { project: Project; index: numb
             </span>
           </div>
 
-          <h3 className="mt-5 text-2xl md:text-3xl font-light tracking-[-0.02em]">
+          <h3 className="mt-4 text-xl md:text-2xl font-light tracking-[-0.02em]">
             {project.name}
           </h3>
 
-          <p className="mt-3 text-sm leading-relaxed text-text-muted flex-grow">
+          <p className="mt-2 text-sm leading-relaxed text-text-muted flex-grow">
             {project.description}
           </p>
 
           {project.metrics && (
-            <div className="mt-5 inline-flex items-center gap-2 text-xs font-mono text-accent/80">
+            <div className="mt-4 inline-flex items-center gap-2 text-xs font-mono text-accent/80">
               <span
                 className="h-1.5 w-1.5 rounded-full"
                 style={{ background: project.color }}
@@ -250,7 +307,7 @@ function Card3D({ project, index, disableTilt }: { project: Project; index: numb
           )}
 
           {project.url && (
-            <div className="mt-6 flex items-center gap-2 text-xs tracking-widest uppercase text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="mt-4 flex items-center gap-2 text-xs tracking-widest uppercase text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               Visit
               <svg
                 width="16"
@@ -343,7 +400,6 @@ export default function Projects() {
     return () => track.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Reset scroll when filter changes
   useEffect(() => {
     if (trackRef.current) {
       trackRef.current.scrollLeft = 0;
@@ -352,7 +408,7 @@ export default function Projects() {
   }, [activeFilter]);
 
   const handlePointerDown = (e: React.PointerEvent) => {
-    if (isTouch) return; // Let native touch scroll handle it
+    if (isTouch) return;
     const track = trackRef.current;
     if (!track) return;
     setIsDragging(true);
@@ -382,8 +438,10 @@ export default function Projects() {
   };
 
   return (
-    <section id="work">
-      <div className="px-6 md:px-16 lg:px-24 pt-16 pb-8 md:pt-20 md:pb-10">
+    <section id="work" className="relative overflow-hidden">
+      <GradientOrb color="#c8a97e" size={400} top="20%" left="-5%" delay={2} />
+
+      <div className="relative z-10 px-6 md:px-16 lg:px-24 pt-16 pb-8 md:pt-20 md:pb-10">
         <FadeIn>
           <div className="mx-auto w-full max-w-[1200px] flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
@@ -441,7 +499,7 @@ export default function Projects() {
       </div>
 
       {/* Horizontal scroll track */}
-      <div className="relative">
+      <div className="relative z-10">
         <div
           ref={trackRef}
           className="overflow-x-auto"
@@ -471,7 +529,7 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* Scroll progress indicator */}
+        {/* Scroll progress */}
         <div className="mt-8 mb-16 px-6 md:px-16 lg:px-24">
           <div className="mx-auto max-w-[1200px]">
             <div className="h-px bg-border">
