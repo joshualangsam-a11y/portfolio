@@ -38,11 +38,25 @@ export default function About() {
         <FadeIn delay={0.1}>
           <h2 className="mt-8 max-w-[900px] text-[clamp(1.5rem,4vw,3.5rem)] font-light leading-[1.2] tracking-[-0.02em]">
             I build AI-powered software for industries that move slow.
-            Co-founder of <span className="text-accent">Roan Co.</span> I
-            orchestrate multi-agent systems that handle sales prospecting, lead
-            enrichment, content creation, and deployment monitoring across 15
-            live products.
           </h2>
+        </FadeIn>
+
+        <FadeIn delay={0.15}>
+          <p className="mt-6 max-w-[700px] text-base md:text-lg leading-relaxed text-text-muted">
+            At 21, I&apos;ve shipped 15 products across legal tech, SaaS,
+            fintech, and AI — not because someone told me to, but because I
+            kept finding industries running on spreadsheets and phone calls. I
+            didn&apos;t learn to code in a classroom. I learned by building
+            things people actually use, breaking them, and shipping the fix
+            before anyone noticed.
+          </p>
+          <p className="mt-4 max-w-[700px] text-base md:text-lg leading-relaxed text-text-muted">
+            I&apos;m the co-founder and CTO of{" "}
+            <span className="text-accent">Roan Co.</span>, where we build
+            AI-powered software for industries that move slow. I orchestrate a
+            47-agent system that handles sales, enrichment, deployments, and QA
+            across every product — autonomously.
+          </p>
         </FadeIn>
 
         {/* Animated Stats */}

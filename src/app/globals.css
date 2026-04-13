@@ -240,3 +240,38 @@ body {
 .reveal-up {
   animation: reveal-up 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
 }
+
+/* Hero dot grid background */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--accent) 0.5px, transparent 0.5px);
+  background-size: 40px 40px;
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+/* Mobile: disable 3D card effects on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .card-3d {
+    transform-style: flat;
+    perspective: none;
+  }
+
+  .card-3d-inner {
+    transform: none !important;
+    will-change: auto;
+  }
+
+  .gradient-border::before {
+    opacity: 0.2;
+  }
+
+  .magnetic-btn {
+    transform: none !important;
+  }
+
+  .cursor-glow {
+    display: none;
+  }
+}

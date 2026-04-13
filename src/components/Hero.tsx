@@ -1,8 +1,10 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
 import MagneticButton from "./MagneticButton";
+
+const roles = ["Builder", "Architect", "Operator", "Founder"];
 
 const line = {
   hidden: { y: "110%" },
@@ -41,12 +43,24 @@ export default function Hero() {
   const y3 = useTransform(scrollYProgress, [0, 1], [0, -40]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
+  const [roleIndex, setRoleIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRoleIndex((prev) => (prev + 1) % roles.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section
       ref={ref}
-      className="relative flex min-h-screen flex-col justify-center px-6 md:px-16 lg:px-24"
+      className="relative flex min-h-screen flex-col justify-center px-6 md:px-16 lg:px-24 overflow-hidden"
     >
-      <motion.div className="mx-auto w-full max-w-[1200px]" style={{ opacity }}>
+      {/* Subtle dot grid background */}
+      <div className="hero-grid" />
+
+      <motion.div className="relative z-10 mx-auto w-full max-w-[1200px]" style={{ opacity }}>
         {/* First name */}
         <div className="overflow-hidden">
           <motion.div style={{ y: y1 }}>
@@ -77,14 +91,38 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Subtitle */}
+        {/* Subtitle with rotating role */}
         <motion.div style={{ y: y3 }}>
-          <motion.p
-            className="mt-10 max-w-md text-base md:text-lg text-text-muted leading-relaxed"
+          <motion.div
+            className="mt-10 flex items-baseline gap-3"
             variants={fade}
             initial="hidden"
             animate="visible"
             custom={0}
+          >
+            <span className="text-base md:text-lg text-text-muted">I&apos;m a</span>
+            <span className="relative inline-flex h-[1.6em] w-[200px] md:w-[260px] overflow-hidden items-baseline">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={roles[roleIndex]}
+                  className="absolute left-0 text-xl md:text-2xl font-light text-accent"
+                  initial={{ y: 30, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -30, opacity: 0 }}
+                  transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+                >
+                  {roles[roleIndex]}
+                </motion.span>
+              </AnimatePresence>
+            </span>
+          </motion.div>
+
+          <motion.p
+            className="mt-4 max-w-md text-base md:text-lg text-text-muted leading-relaxed"
+            variants={fade}
+            initial="hidden"
+            animate="visible"
+            custom={1}
           >
             I build AI agent systems that run businesses.
             <br />
@@ -98,7 +136,7 @@ export default function Hero() {
             variants={fade}
             initial="hidden"
             animate="visible"
-            custom={1}
+            custom={2}
           >
             <MagneticButton>
               <a
@@ -122,7 +160,7 @@ export default function Hero() {
 
       {/* Bottom indicators */}
       <motion.div
-        className="absolute bottom-12 left-6 md:left-16 lg:left-24 flex items-center gap-3 text-xs tracking-widest uppercase text-text-muted"
+        className="absolute bottom-12 left-6 md:left-16 lg:left-24 flex items-center gap-3 text-xs tracking-widest uppercase text-text-muted z-10"
         variants={fade}
         initial="hidden"
         animate="visible"
@@ -139,7 +177,7 @@ export default function Hero() {
       </motion.div>
 
       <motion.div
-        className="absolute bottom-12 right-6 md:right-16 lg:right-24 flex items-center gap-3 text-xs tracking-widest uppercase text-text-muted"
+        className="absolute bottom-12 right-6 md:right-16 lg:right-24 flex items-center gap-3 text-xs tracking-widest uppercase text-text-muted z-10"
         variants={fade}
         initial="hidden"
         animate="visible"

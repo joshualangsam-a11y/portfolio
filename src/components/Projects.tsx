@@ -1,12 +1,13 @@
 "use client";
 
-import { motion, useMotionValue, animate } from "framer-motion";
+import { motion, useMotionValue, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect, MouseEvent } from "react";
 import FadeIn from "./FadeIn";
 
 type Project = {
   name: string;
   category: string;
+  tags: string[];
   description: string;
   color: string;
   url?: string;
@@ -14,10 +15,13 @@ type Project = {
   year: string;
 };
 
+const filters = ["All", "AI", "SaaS", "Dev Tools", "Sales"];
+
 const projects: Project[] = [
   {
     name: "Litigation Juris",
     category: "Legal Tech / AI",
+    tags: ["AI"],
     description:
       "AI-powered case management for Florida PI firms. 230+ API routes, intelligent document analysis, automated workflows.",
     color: "#c8a97e",
@@ -28,6 +32,7 @@ const projects: Project[] = [
   {
     name: "Agent Command Center",
     category: "AI / Orchestration",
+    tags: ["AI"],
     description:
       "47-agent system orchestrating sales, enrichment, outreach, deploys, and content across 15 products. One master routes to named specialists in parallel.",
     color: "#8ec87e",
@@ -37,6 +42,7 @@ const projects: Project[] = [
   {
     name: "Cortex",
     category: "Dev Tools / Elixir",
+    tags: ["Dev Tools"],
     description:
       "Terminal orchestrator in Elixir. Manages 8-9 concurrent PTY sessions with intelligent routing, process supervision, and real-time multiplexing.",
     color: "#e07e5a",
@@ -46,6 +52,7 @@ const projects: Project[] = [
   {
     name: "FuelOps",
     category: "SaaS / Operations",
+    tags: ["SaaS"],
     description:
       "Gas station management platform. Daily fuel reconciliation, cash variance tracking, and c-store inventory for multi-location operators.",
     color: "#7eb8c8",
@@ -55,6 +62,7 @@ const projects: Project[] = [
   {
     name: "VapeOps",
     category: "SaaS / Retail",
+    tags: ["SaaS"],
     description:
       "Vape shop management SaaS. Inventory tracking, compliance monitoring, and POS integration for independent retailers.",
     color: "#c87ea9",
@@ -64,6 +72,7 @@ const projects: Project[] = [
   {
     name: "Hemp Route CRM",
     category: "Sales / CRM",
+    tags: ["Sales"],
     description:
       "Route management and CRM for wholesale hemp distribution. Commission tracking, visit logging, prospect pipeline for 500-account target.",
     color: "#7ec88a",
@@ -73,6 +82,7 @@ const projects: Project[] = [
   {
     name: "SiteScout",
     category: "Elixir / Prospecting",
+    tags: ["Dev Tools", "Sales"],
     description:
       "Automated website prospecting tool built in Elixir. Scans local businesses, audits site quality, scores leads, and generates outreach.",
     color: "#c8b87e",
@@ -82,6 +92,7 @@ const projects: Project[] = [
   {
     name: "Servicewright",
     category: "SaaS / Home Services",
+    tags: ["SaaS"],
     description:
       "AI-powered platform for Florida home service businesses. Client onboarding, engagement tracking, and marketplace matching for snowbird property care.",
     color: "#7e9ec8",
@@ -91,6 +102,7 @@ const projects: Project[] = [
   {
     name: "AlphaSwarm",
     category: "AI / Finance",
+    tags: ["AI"],
     description:
       "Multi-agent AI trading system in Elixir. Eight GenServer agents analyze markets, manage risk, and execute trades through broker APIs.",
     color: "#7ec88a",
@@ -100,6 +112,7 @@ const projects: Project[] = [
   {
     name: "StreamSnip",
     category: "AI / Video",
+    tags: ["AI"],
     description:
       "Paste a YouTube URL. AI detects viral moments, cuts vertical clips with burned-in captions. FastAPI + Vite, deployed on Railway.",
     color: "#c87ea9",
@@ -108,6 +121,7 @@ const projects: Project[] = [
   {
     name: "FanForge",
     category: "SaaS / Music",
+    tags: ["SaaS", "AI"],
     description:
       "AI music marketing platform. Artists connect TikTok, Instagram, YouTube, and X. Generates content strategies and schedules posts.",
     color: "#c87e7e",
@@ -117,6 +131,7 @@ const projects: Project[] = [
   {
     name: "VerdictAds",
     category: "AI / Marketing",
+    tags: ["AI"],
     description:
       "AI ad generation for PI law firms. Campaign creatives, copy, and video ads with Remotion rendering, tailored to personal injury verticals.",
     color: "#c8c87e",
@@ -125,6 +140,7 @@ const projects: Project[] = [
   {
     name: "GreekLedger",
     category: "Fintech / AI",
+    tags: ["AI"],
     description:
       "AI budget auditor for fraternities. Ingests bank statements, categorizes expenses, flags anomalies, and generates savings recommendations.",
     color: "#a97ec8",
@@ -133,6 +149,7 @@ const projects: Project[] = [
   {
     name: "Tab Commander",
     category: "Dev Tools",
+    tags: ["Dev Tools"],
     description:
       "Chrome extension for tab management. Workspaces, auto-suspend, command palette, and keyboard-driven navigation.",
     color: "#7e8ec8",
@@ -141,14 +158,22 @@ const projects: Project[] = [
   },
 ];
 
-function Card3D({ project, index }: { project: Project; index: number }) {
+function useIsTouchDevice() {
+  const [isTouch, setIsTouch] = useState(false);
+  useEffect(() => {
+    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
+  }, []);
+  return isTouch;
+}
+
+function Card3D({ project, index, disableTilt }: { project: Project; index: number; disableTilt: boolean }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(0);
   const brightness = useMotionValue(1);
 
   const handleMouse = (e: MouseEvent) => {
-    if (!cardRef.current) return;
+    if (disableTilt || !cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -173,8 +198,8 @@ function Card3D({ project, index }: { project: Project; index: number }) {
         className="card-3d-inner gradient-border group relative bg-bg-elevated overflow-hidden h-full rounded-[7px]"
         style={
           {
-            rotateX,
-            rotateY,
+            rotateX: disableTilt ? 0 : rotateX,
+            rotateY: disableTilt ? 0 : rotateY,
             filter: `brightness(${brightness.get()})`,
             "--card-color": project.color,
           } as React.CSSProperties
@@ -248,12 +273,60 @@ function Card3D({ project, index }: { project: Project; index: number }) {
   );
 }
 
+function CardWrapper({
+  project,
+  index,
+  isDragging,
+  disableTilt,
+}: {
+  project: Project;
+  index: number;
+  isDragging: boolean;
+  disableTilt: boolean;
+}) {
+  const clickStartX = useRef(0);
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (Math.abs(e.clientX - clickStartX.current) > 5) {
+      e.preventDefault();
+      return;
+    }
+    if (project.url) {
+      window.open(project.url, "_blank", "noopener,noreferrer");
+    }
+  };
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+      onMouseDown={(e) => {
+        clickStartX.current = e.clientX;
+      }}
+      onClick={handleClick}
+      style={{ cursor: project.url ? "pointer" : "default" }}
+    >
+      <Card3D project={project} index={index} disableTilt={disableTilt} />
+    </motion.div>
+  );
+}
+
 export default function Projects() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [activeFilter, setActiveFilter] = useState("All");
   const dragStartX = useRef(0);
   const scrollStart = useRef(0);
+  const isTouch = useIsTouchDevice();
+
+  const filtered =
+    activeFilter === "All"
+      ? projects
+      : projects.filter((p) => p.tags.includes(activeFilter));
 
   useEffect(() => {
     const track = trackRef.current;
@@ -270,7 +343,16 @@ export default function Projects() {
     return () => track.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Reset scroll when filter changes
+  useEffect(() => {
+    if (trackRef.current) {
+      trackRef.current.scrollLeft = 0;
+      setProgress(0);
+    }
+  }, [activeFilter]);
+
   const handlePointerDown = (e: React.PointerEvent) => {
+    if (isTouch) return; // Let native touch scroll handle it
     const track = trackRef.current;
     if (!track) return;
     setIsDragging(true);
@@ -292,7 +374,7 @@ export default function Projects() {
   const scrollBy = (direction: number) => {
     const track = trackRef.current;
     if (!track) return;
-    const cardWidth = 424; // 400px card + 24px gap
+    const cardWidth = 424;
     track.scrollTo({
       left: track.scrollLeft + direction * cardWidth,
       behavior: "smooth",
@@ -303,7 +385,7 @@ export default function Projects() {
     <section id="work">
       <div className="px-6 md:px-16 lg:px-24 pt-16 pb-8 md:pt-20 md:pb-10">
         <FadeIn>
-          <div className="mx-auto w-full max-w-[1200px] flex items-end justify-between">
+          <div className="mx-auto w-full max-w-[1200px] flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <span className="text-xs tracking-[0.2em] uppercase text-text-muted">
                 Selected Work
@@ -314,11 +396,11 @@ export default function Projects() {
             </div>
             <div className="flex items-center gap-3">
               <span className="text-xs font-mono text-text-muted/50 mr-4">
-                {projects.length} projects
+                {filtered.length} projects
               </span>
               <button
                 onClick={() => scrollBy(-1)}
-                className="w-10 h-10 rounded-[7px] border border-border flex items-center justify-center text-text-muted hover:text-accent hover:border-accent/30 transition-colors"
+                className="hidden md:flex w-10 h-10 rounded-[7px] border border-border items-center justify-center text-text-muted hover:text-accent hover:border-accent/30 transition-colors"
                 aria-label="Previous project"
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -327,7 +409,7 @@ export default function Projects() {
               </button>
               <button
                 onClick={() => scrollBy(1)}
-                className="w-10 h-10 rounded-[7px] border border-border flex items-center justify-center text-text-muted hover:text-accent hover:border-accent/30 transition-colors"
+                className="hidden md:flex w-10 h-10 rounded-[7px] border border-border items-center justify-center text-text-muted hover:text-accent hover:border-accent/30 transition-colors"
                 aria-label="Next project"
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -335,6 +417,25 @@ export default function Projects() {
                 </svg>
               </button>
             </div>
+          </div>
+        </FadeIn>
+
+        {/* Filter tabs */}
+        <FadeIn delay={0.1}>
+          <div className="mx-auto w-full max-w-[1200px] mt-8 flex gap-2 overflow-x-auto">
+            {filters.map((f) => (
+              <button
+                key={f}
+                onClick={() => setActiveFilter(f)}
+                className={`px-5 py-2 text-xs tracking-widest uppercase rounded-[7px] border transition-all duration-300 whitespace-nowrap ${
+                  activeFilter === f
+                    ? "border-accent/40 text-accent bg-accent/5"
+                    : "border-border text-text-muted hover:border-accent/20 hover:text-text"
+                }`}
+              >
+                {f}
+              </button>
+            ))}
           </div>
         </FadeIn>
       </div>
@@ -345,7 +446,7 @@ export default function Projects() {
           ref={trackRef}
           className="overflow-x-auto"
           style={{
-            cursor: isDragging ? "grabbing" : "grab",
+            cursor: isTouch ? "auto" : isDragging ? "grabbing" : "grab",
             scrollbarWidth: "none",
             msOverflowStyle: "none",
             WebkitOverflowScrolling: "touch",
@@ -356,9 +457,17 @@ export default function Projects() {
           onPointerCancel={handlePointerUp}
         >
           <div className="horizontal-scroll">
-            {projects.map((project, i) => (
-              <CardWrapper key={project.name} project={project} index={i} isDragging={isDragging} />
-            ))}
+            <AnimatePresence mode="popLayout">
+              {filtered.map((project, i) => (
+                <CardWrapper
+                  key={project.name}
+                  project={project}
+                  index={i}
+                  isDragging={isDragging}
+                  disableTilt={isTouch}
+                />
+              ))}
+            </AnimatePresence>
           </div>
         </div>
 
@@ -372,39 +481,14 @@ export default function Projects() {
               />
             </div>
             <div className="mt-4 flex justify-between text-[10px] font-mono text-text-muted/40">
-              <span>Drag or scroll to explore</span>
+              <span>{isTouch ? "Swipe to explore" : "Drag or scroll to explore"}</span>
               <span>
-                {String(Math.round(progress * (projects.length - 1)) + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
+                {String(Math.min(Math.round(progress * (filtered.length - 1)) + 1, filtered.length)).padStart(2, "0")} / {String(filtered.length).padStart(2, "0")}
               </span>
             </div>
           </div>
         </div>
       </div>
     </section>
-  );
-}
-
-function CardWrapper({ project, index, isDragging }: { project: Project; index: number; isDragging: boolean }) {
-  const clickStartX = useRef(0);
-
-  const handleClick = (e: React.MouseEvent) => {
-    // Don't navigate if the user was dragging
-    if (Math.abs(e.clientX - clickStartX.current) > 5) {
-      e.preventDefault();
-      return;
-    }
-    if (project.url) {
-      window.open(project.url, "_blank", "noopener,noreferrer");
-    }
-  };
-
-  return (
-    <div
-      onMouseDown={(e) => { clickStartX.current = e.clientX; }}
-      onClick={handleClick}
-      style={{ cursor: project.url ? "pointer" : "default" }}
-    >
-      <Card3D project={project} index={index} />
-    </div>
   );
 }
